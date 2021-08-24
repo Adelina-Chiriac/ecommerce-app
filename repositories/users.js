@@ -28,4 +28,11 @@ class UsersRepository {
     }
 }
 
+const testFunc = async () => {
     const repo = new UsersRepository("users.json");
+
+    const users = await repo.getAll();
+    console.log(users);
+}
+
+testFunc();
