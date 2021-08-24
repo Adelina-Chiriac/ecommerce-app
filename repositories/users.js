@@ -17,4 +17,15 @@ class UsersRepository {
             fs.writeFileSync(this.filename, "[]");
         }
     }
+
+    // Retrieve all the users in the repository
+    async getAll() {
+        // Open the file, read it and parse it 
+        const contents = JSON.parse(await fs.promises.readFile(this.filename, { encoding: "utf8"}));
+
+        // Return the parsed contents
+        return contents;
+    }
 }
+
+    const repo = new UsersRepository("users.json");
