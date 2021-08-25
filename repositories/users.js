@@ -40,11 +40,20 @@ class UsersRepository {
     }
 
     async writeAll(records) {
+        // Write the records array to the repository file
         await fs.promises.writeFile(this.filename, JSON.stringify(records, null, 2));
     }
 
     randomId() {
+        // Generate a random ID
         return crypto.randomBytes(4).toString("hex");
+    }
+
+    async getOne(id) {
+        // Retrieve all the existing records/users
+        const records = await this.getAll();
+        // Iterate through the users array and search for the given ID (return true if the user with that given ID has been found)
+        records.find((record) => { record.id === id });
     }
 }
 
