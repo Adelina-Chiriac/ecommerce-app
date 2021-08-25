@@ -53,17 +53,15 @@ class UsersRepository {
         // Retrieve all the existing records/users
         const records = await this.getAll();
         // Iterate through the users array and search for the given ID (return true if the user with that given ID has been found)
-        records.find((record) => { record.id === id });
+        return records.find((record) => record.id === id );
     }
 }
 
 const testFunc = async () => {
     const repo = new UsersRepository("users.json");
 
-    await repo.create({ email: "test@email.com", password: "pass2" });
-
-    const users = await repo.getAll();
-    console.log(users);
+    const user = await repo.getOne("5bcc5b56");
+    console.log(user);
 }
 
 testFunc();
