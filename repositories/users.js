@@ -69,8 +69,8 @@ class UsersRepository {
 const testFunc = async () => {
     const repo = new UsersRepository("users.json");
 
-    const user = await repo.getOne("5bcc5b56");
-    console.log(user);
+    await repo.delete("5bcc5b56");
+
 }
 
 testFunc();
