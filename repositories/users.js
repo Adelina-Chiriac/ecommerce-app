@@ -26,6 +26,15 @@ class UsersRepository {
         // Return the parsed contents
         return contents;
     }
+
+    async create(attributes) {
+        // Retrieve the existing users from our repository
+        const records = await this.getAll();
+        // Push the new user into the records array
+        records.push(attributes);
+        // Write the updated records array back to this.filename (users.json, in this case)
+        await fs.promises.writeFile(this.filename, JSON.stringify(records));
+    }
 }
 
 const testFunc = async () => {
