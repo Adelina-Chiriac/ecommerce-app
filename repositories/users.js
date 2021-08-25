@@ -55,6 +55,15 @@ class UsersRepository {
         // Iterate through the users array and search for the given ID (return true if the user with that given ID has been found)
         return records.find((record) => record.id === id );
     }
+
+    async delete(id) {
+        // Retrieve all the existing records/users
+        const records = await this.getAll();
+        // Filter out the user with the given ID from the records array
+        const filteredRecords = records.filter((record) => record.id !== id);
+        // Write the updated records array to the repository file
+        await this.writeAll(filteredRecords);
+    }
 }
 
 const testFunc = async () => {
