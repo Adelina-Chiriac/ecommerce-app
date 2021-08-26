@@ -10,7 +10,7 @@ app.use(cookieSession({
     keys: ["dgjrtp4ip24uyro4f3e2"]
 }));
 
-app.get("/", (req, res) => {
+app.get("/signup", (req, res) => {
     res.send(`
     <div>
         <form method="POST">
@@ -23,7 +23,7 @@ app.get("/", (req, res) => {
     `);
 });
 
-app.post("/", async (req, res) => {
+app.post("/signup", async (req, res) => {
     const { email, password, passwordConfirmation } = req.body;
 
     const existingUser = await usersRepo.getOneBy({ email: email });
