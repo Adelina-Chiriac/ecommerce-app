@@ -101,11 +101,5 @@ class UsersRepository {
     }
 }
 
-const testFunc = async () => {
-    const repo = new UsersRepository("users.json");
-
-    const user = await repo.getOneBy({ email: "ade@adde.com" });
-    console.log(user);
-}
-
-testFunc();
+// Make the class available for import by other files
+module.exports = new UsersRepository("users.json");
