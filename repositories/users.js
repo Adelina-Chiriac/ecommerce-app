@@ -64,6 +64,21 @@ class UsersRepository {
         // Write the updated records array to the repository file
         await this.writeAll(filteredRecords);
     }
+
+    async update(id, attributes) {
+        // Retrieve all the existing records/users
+        const records = await this.getAll();
+        // Iterate through the users array and search for the user with the given ID
+        const record = records.find((record) => record.id === id );
+        // Check if we found a record
+        if (!record) {
+            throw new Error(`The record with the id ${id} has not been found!`);
+        }
+        // Update the record (copy all the key value pairs from attributes, one by one, into the record object)
+        Object.assign(record, attributes);
+        // Write the updated records array to the repository file
+        await this.writeAll(records);
+    }
 }
 
 const testFunc = async () => {
