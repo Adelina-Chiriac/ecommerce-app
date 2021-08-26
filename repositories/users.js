@@ -79,6 +79,26 @@ class UsersRepository {
         // Write the updated records array to the repository file
         await this.writeAll(records);
     }
+
+    async getOneBy(filters) {
+        // Retrieve all the existing records/users
+        const records = await this.getAll();
+        // Iterate through the records array
+        for (let record of records) {
+            // Initialize a temporary variable to keep track if the record has been found
+            let found = true;
+            // Iterate through the filters object
+            for (let key in filters) {
+                if (record[key] !== filters[key]) {
+                    found = false;
+                }
+            }
+            // If found is still true, it means we found a match
+            if (found) {
+                return record;
+            }
+        }
+    }
 }
 
 const testFunc = async () => {
