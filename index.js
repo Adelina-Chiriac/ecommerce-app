@@ -10,6 +10,7 @@ app.use(cookieSession({
     keys: ["dgjrtp4ip24uyro4f3e2"]
 }));
 
+// SIGN UP
 app.get("/signup", (req, res) => {
     res.send(`
     <div>
@@ -23,6 +24,7 @@ app.get("/signup", (req, res) => {
     `);
 });
 
+// SIGN UP
 app.post("/signup", async (req, res) => {
     const { email, password, passwordConfirmation } = req.body;
 
@@ -42,6 +44,12 @@ app.post("/signup", async (req, res) => {
     req.session.userId = user.id;
 
     res.send("Your account has been created!");
+});
+
+// SIGN OUT
+app.get("/signout", (req, res) => {
+    req.session = null;
+    res.send("You have been logged out!");
 });
 
 app.listen("3000", () => {
