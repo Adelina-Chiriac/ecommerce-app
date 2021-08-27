@@ -52,6 +52,39 @@ app.get("/signout", (req, res) => {
     res.send("You have been logged out!");
 });
 
+// SIGN IN
+app.get("/signin", (req, res) => {
+    res.send(`
+        <div>
+            <form method="POST">
+                <input name="email" placeholder="Email" />
+                <input name="password" placeholder="Password" />
+                <button>Sign In</button>
+            </form>
+        </div>
+    `);
+});
+
+// SIGN IN
+app.post("/signin", async (req, res) => {
+    const { email, password } = req.body;
+
+    const user = await usersRepo.getOneBy({ email: email });
+
+    if (!user) {
+        return res.send("There is no user with that email!");
+    }
+
+    if (password !== user.password) {
+        return res.send("The password is incorrect!");
+    }
+
+    // Mark the user as signed in by assigning the ID to the cookie session object
+    req.session.userId = user.id;
+
+    res.send("You are now logged in!");
+});
+
 app.listen("3000", () => {
     console.log("Listening...");
 });
