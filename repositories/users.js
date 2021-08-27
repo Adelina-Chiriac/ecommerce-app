@@ -1,5 +1,9 @@
 const fs = require("fs");
 const crypto = require("crypto");
+const util = require("util");
+
+// Use a promise-based version of the scrypt function (instead of the original callback)
+const scrypt = util.promisify(crypto.scrypt);
 
 class UsersRepository {
     constructor(filename) {
@@ -31,14 +35,22 @@ class UsersRepository {
     async create(attributes) {
         // Assign a randomly generated ID to the attributes object
         attributes.id = this.randomId();
+        // Generate a salt
+        const salt = crypto.randomBytes(8).toString("hex");
+        // Use the password & salt to generate a hashed password
+        const hashed = await scrypt(attributes.password, salt, 64);
         // Retrieve the existing users from our repository
         const records = await this.getAll();
         // Push the new user into the records array
-        records.push(attributes);
+        const record = {
+            ...attributes, 
+            password: `${hashed.toString("hex")}.${salt}`
+        }
+        records.push(record);
         // Write the updated records array back to this.filename (users.json, in this case)
         await this.writeAll(records);
-        // Return the attributes object
-        return attributes;
+        // Return the record object
+        return record;
     }
 
     async writeAll(records) {
