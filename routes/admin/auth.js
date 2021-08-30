@@ -44,12 +44,6 @@ router.post(
     console.log(errors);
     const { email, password, passwordConfirmation } = req.body;
 
-
-
-    if (password !== passwordConfirmation) {
-        return res.send("The passwords have to match!");
-    }
-
     // Create a user in our user repository
     const user = await usersRepo.create({ email: email, password: password });
 
