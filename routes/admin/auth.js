@@ -3,7 +3,7 @@ const { check, validationResult } = require("express-validator");
 const usersRepo = require("../../repositories/users");
 const signupTemplate = require("../../views/admin/auth/signup");
 const signinTemplate = require("../../views/admin/auth/signin");
-const { requireEmail, requirePassword, requirePasswordConfirmation } = require("./validators");
+const { requireEmail, requirePassword, requirePasswordConfirmation, requireEmailExists, requireValidPasswordForUser } = require("./validators");
 
 const router = express.Router();
 
@@ -21,12 +21,13 @@ router.post(
     requirePasswordConfirmation
 ], async (req, res) => {
     const errors = validationResult(req);
+    console.log(errors);
 
     if (!errors.isEmpty()) {
         return res.send(signupTemplate({ req, errors }));
     }
     
-    const { email, password, passwordConfirmation } = req.body;
+    const { email, password } = req.body;
 
     // Create a user in our user repository
     const user = await usersRepo.create({ email: email, password: password });
@@ -49,21 +50,17 @@ router.get("/signin", (req, res) => {
 });
 
 // SIGN IN
-router.post("/signin", async (req, res) => {
-    const { email, password } = req.body;
+router.post("/signin", [
+    requireEmailExists,
+    requireValidPasswordForUser
+], async (req, res) => {
+    const errors = validationResult(req);
+    console.log(errors);
 
-    const user = await usersRepo.getOneBy({ email: email });
+    const { email } = req.body;
 
-    if (!user) {
-        return res.send("There is no user with that email!");
-    }
-
-    const validPass = await usersRepo.comparePasswords(user.password, password);
-
-    if (!validPass) {
-        return res.send("The password is incorrect!");
-    }
-
+    const user = await usersRepo.getOneBy({ email: email});
+    
     // Mark the user as signed in by assigning the ID to the cookie session object
     req.session.userId = user.id;
 
