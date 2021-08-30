@@ -15,18 +15,20 @@ router.get("/signup", (req, res) => {
 router.post(
     "/signup", 
 [
-    check("email").trim().normalizeEmail().isEmail().withMessage("Please enter a valid email address"),
+    check("email").trim().normalizeEmail().isEmail().withMessage("Please enter a valid email address").custom(async (email) => {
+        const existingUser = await usersRepo.getOneBy({ email: email });
+        if (existingUser) {
+            throw new Error("This email address is already in use");
+        }
+    }),
     check("password").trim().isLength({ min: 8, max: 20}).withMessage("Your password must be between 8 and 20 characters long"),
     check("passwordConfirmation").trim().isLength({ min: 8, max: 20}).withMessage("Your password must be between 8 and 20 characters long")
 ], async (req, res) => {
     const errors = validationResult(req);
-
+    console.log(errors);
     const { email, password, passwordConfirmation } = req.body;
 
-    const existingUser = await usersRepo.getOneBy({ email: email });
-    if (existingUser) {
-        return res.send("This email is already in use!");
-    }
+
 
     if (password !== passwordConfirmation) {
         return res.send("The passwords have to match!");
