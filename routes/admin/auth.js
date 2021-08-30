@@ -21,7 +21,11 @@ router.post(
     requirePasswordConfirmation
 ], async (req, res) => {
     const errors = validationResult(req);
-    console.log(errors);
+
+    if (!errors.isEmpty()) {
+        return res.send(signupTemplate({ req, errors }));
+    }
+    
     const { email, password, passwordConfirmation } = req.body;
 
     // Create a user in our user repository
