@@ -21,7 +21,6 @@ router.post(
     requirePasswordConfirmation
 ], async (req, res) => {
     const errors = validationResult(req);
-    console.log(errors);
 
     if (!errors.isEmpty()) {
         return res.send(signupTemplate({ req, errors }));
@@ -46,7 +45,7 @@ router.get("/signout", (req, res) => {
 
 // SIGN IN
 router.get("/signin", (req, res) => {
-    res.send(signinTemplate());
+    res.send(signinTemplate({}));
 });
 
 // SIGN IN
@@ -55,7 +54,10 @@ router.post("/signin", [
     requireValidPasswordForUser
 ], async (req, res) => {
     const errors = validationResult(req);
-    console.log(errors);
+
+    if (!errors.isEmpty()) {
+        return res.send(signinTemplate({ errors: errors }));
+    }
 
     const { email } = req.body;
 
