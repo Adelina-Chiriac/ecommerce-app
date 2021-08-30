@@ -7,6 +7,7 @@ const { comparePasswords } = require("./repositories/users");
 
 const app = express();
 
+app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieSession({
     keys: ["dgjrtp4ip24uyro4f3e2"]
