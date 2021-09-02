@@ -1,7 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 
-const { handlleErrors, handleErrors } = require("./middlewares");
+const { handleErrors, requireAuthentication } = require("./middlewares");
 const productsRepo = require("../../repositories/products");
 const newProductTemplate = require("../../views/admin/products/new");
 const productsIndexTemplate = require("../../views/admin/products/index");
@@ -10,17 +10,17 @@ const { requireTitle, requirePrice } = require("./validators");
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
-router.get("/admin/products", async (req, res) => {
+router.get("/admin/products", requireAuthentication, async (req, res) => {
     const products = await productsRepo.getAll();
     
     res.send(productsIndexTemplate({ products }));
 });
 
-router.get("/admin/products/new", (req, res) => {
+router.get("/admin/products/new", requireAuthentication, (req, res) => {
     res.send(newProductTemplate({}));
 });
 
-router.post("/admin/products/new", upload.single("image"), [requireTitle, requirePrice], handleErrors(newProductTemplate), async (req, res) => {
+router.post("/admin/products/new", requireAuthentication, upload.single("image"), [requireTitle, requirePrice], handleErrors(newProductTemplate), async (req, res) => {
 
     const image = req.file.buffer.toString("base64");
     const { title, price } = req.body;
