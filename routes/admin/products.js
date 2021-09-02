@@ -31,7 +31,7 @@ router.post("/admin/products/new", requireAuthentication, upload.single("image")
     res.redirect("/admin/products");
 });
 
-router.get("/admin/products/:id/edit", async (req, res) => {
+router.get("/admin/products/:id/edit", requireAuthentication, async (req, res) => {
     const product = await productsRepo.getOne(req.params.id);
 
     if (!product) {
