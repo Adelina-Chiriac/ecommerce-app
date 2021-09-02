@@ -29,7 +29,7 @@ router.post(
     // Get the ID from the user and store it in the cookie
     req.session.userId = user.id;
 
-    res.send("Your account has been created!");
+    res.redirect("/admin/products");
 });
 
 // SIGN OUT
@@ -56,7 +56,7 @@ router.post("/signin", [
     // Mark the user as signed in by assigning the ID to the cookie session object
     req.session.userId = user.id;
 
-    res.send("You are now logged in!");
+    res.redirect("/admin/products");
 });
 
 module.exports = router;
