@@ -2,7 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cookieSession = require("cookie-session");
 const authenticationRouter = require("./routes/admin/auth");
-const productsRouter = require("./routes/admin/products");
+const adminProductsRouter = require("./routes/admin/products");
+const productsRouter = require("./routes/products");
 
 const { comparePasswords } = require("./repositories/users");
 
@@ -14,6 +15,7 @@ app.use(cookieSession({
     keys: ["dgjrtp4ip24uyro4f3e2"]
 }));
 app.use(authenticationRouter);
+app.use(adminProductsRouter);
 app.use(productsRouter);
 
 app.listen("3000", () => {
