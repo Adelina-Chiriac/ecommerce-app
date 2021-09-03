@@ -41,4 +41,26 @@ router.get("/admin/products/:id/edit", requireAuthentication, async (req, res) =
     res.send(editProductTemplate({ product }));
 });
 
+router.post("/admin/products/:id/edit", 
+    requireAuthentication, 
+    upload.single("image"), 
+    [requireTitle, requirePrice], 
+    handleErrors(editProductTemplate), 
+    async (req, res) => {
+        const changes = req.body;
+
+        // If a file has been added in the edit form
+        if (req.file) {
+            changes.image = req.file.buffer.toString("base64");
+        }
+        try {
+            await productsRepo.update(req.params.id, changes);
+        }
+        catch (err) {
+            return res.send("This product could not be found!");
+        }
+
+        res.redirect("/admin/products");
+}); 
+
 module.exports = router;
