@@ -4,8 +4,10 @@ const cookieSession = require("cookie-session");
 const authenticationRouter = require("./routes/admin/auth");
 const adminProductsRouter = require("./routes/admin/products");
 const productsRouter = require("./routes/products");
+const cartsRouter = require("./routes/carts");
 
 const { comparePasswords } = require("./repositories/users");
+const carts = require("./repositories/carts");
 
 const app = express();
 
@@ -17,6 +19,7 @@ app.use(cookieSession({
 app.use(authenticationRouter);
 app.use(adminProductsRouter);
 app.use(productsRouter);
+app.use(cartsRouter);
 
 app.listen("3000", () => {
     console.log("Listening...");
