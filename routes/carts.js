@@ -26,6 +26,10 @@ router.post("/cart/products", async (req, res) => {
         cart.items.push({ id: req.body.productId, quantity: 1});
     }
 
+    // Save the cart record to the repository
+    await cartsRepo.update(cart.id, {
+        items: cart.items
+    });
 
     res.send("Product added to cart!");
 });
