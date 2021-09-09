@@ -14,6 +14,13 @@ router.post("/cart/products", async (req, res) => {
     else {
         cart = await cartsRepo.getOne(req.session.cartId);
     }
+    
+    // If the product already exists in the user's cart...
+    const existingProduct = cart.items.find((item) => item.id === req.body.productId);
+    // ...increase the quantity
+    if (existingProduct) {
+        existingProduct.quantity++;
+    }
 
     res.send("Product added to cart!");
 });
