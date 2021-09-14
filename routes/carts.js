@@ -55,4 +55,18 @@ router.get("/cart", async (req, res) => {
     res.send(showCartTemplate({ items: cart.items }));
 });
 
+// POST request to delete a product from the cart
+router.post("/cart/products/delete", async (req, res) => {
+    const { itemId } = req.body;
+    const cart = await cartsRepo.getOne(req.session.cartId);
+
+    // Create a new updated array with all the products except for the one to be deleted
+    const items = cart.items.filter((item) => item.id !== itemId);
+
+    // Update the cart repository with the updated cart
+    await cartsRepo.update(req.session.cartId, { items });
+
+    res.redirect("/cart");
+});
+
 module.exports = router;
